@@ -3,7 +3,7 @@
 This is an om-next tutorial.  Please check out the tutorials in sequence.  They are:
 
   tut0 - A basic Hello World app. (done)
-  tut1 - Adding state and reading from that state. (in progress)
+  tut1a - Adding state and reading from that state. (in progress)
   tut2 - Writing to the state. (in progress)
   (more to come)
 

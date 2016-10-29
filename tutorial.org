@@ -44,3 +44,28 @@ I cider-jack-in this project and then run figwheel in the project to
 get a cljs repl in emacs.  Then I can just go to the URL:
 http://localhost:3449/ to have a look at the results.
 
+* Tutorial 1a: Adding state and reading from it
+
+Okay, we've really modified the ~core.cljs~ file here.  Lets break it
+down.  First we created a ~readr~ function (method).  It has access to
+the app state via the ~env~ variable: ~@(:state env)~.
+
+Stick ~(.log js/console "STATE: " (str @(:state env)))~ into the readr
+function just before you return the ~val~, to confirm this prints the
+state.
+
+~keyz~, is passed whatever is in your ~query~ from the component
+definition.  You can log that out if you like too.
+
+The result of the reading is stuck into the ~props~ that is passed to
+the component.  Even though the reader returns {:value ...}, behind
+the scenes, om converts the key to be :title instead.  I.e. that which
+was passed to via the query to the reader becomes the key for the
+props.
+
+Thats why we access the title via: (:title ...) versus (:value ...).
+
+Finally the rest is just wiring the different parts together.  We set
+the reader in the parser.  The reconciler connects the parser to the
+app state.  Finally this more full fledged reconciler is connected to
+the component via the ~add-root!~ function.
