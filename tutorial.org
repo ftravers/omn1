@@ -1,0 +1,46 @@
+* Tutorial 0: Initial Project
+
+How to creat an absolute shell of a project:
+
+#+BEGIN_SRC shell
+╭─ ~/projects  ‹master*› 
+╰─➤  lein new omn1
+Generating a project called omn1 based on the 'default' template.
+...
+╭─ ~/projects  ‹master*› 
+╰─➤  cd omn1
+╭─ ~/projects/omn1  ‹master*› 
+╰─➤  git init .
+Initialized empty Git repository in /home/fenton/projects/omn1/.git/
+╭─ ~/projects/omn1  ‹master*› 
+╰─➤  git add .                                                                                                       1 ↵
+╭─ ~/projects/omn1  ‹master*› 
+╰─➤  git commit -a -m 'initial'
+[master (root-commit) 2578d78] initial
+ 8 files changed, 285 insertions(+)
+ ...
+#+END_SRC
+
+** Explanation
+
+Now lets get a hello world app going.  There are some major
+~project.clj~ file updates.  I wont go into them much.  The main file
+to look at is: ~src/cljs/omn1/core.cljs~
+
+The ~defui~ macro is how you create a component in om-next.
+Components are how you manage the visual aspect of your project.  In
+our simple component we are simply creating a ~div~ html element with
+the text content being: "Hello World".
+
+Finally we need to tie this component to the ~html~ page.  Here we use
+the ~add-root!~ om function to do this.  The first argument is
+a nil reconciler.  More on that later.  Then the root component, and
+finally the id of the html tag where to mount this component.  See the
+file ~resources/public/index.html~ to find the div with id "app".
+
+** Testing
+
+I cider-jack-in this project and then run figwheel in the project to
+get a cljs repl in emacs.  Then I can just go to the URL:
+http://localhost:3449/ to have a look at the results.
+
