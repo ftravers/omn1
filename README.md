@@ -2,9 +2,10 @@
 
 This is an om-next tutorial.  Please check out the tutorials in sequence.  They are:
 
-  tut0 - A basic Hello World app. (done)
-  tut1a - Adding state and reading from that state. (in progress)
-  tut2 - Writing to the state. (in progress)
+  init - Baseline
+  tut0 - A basic Hello World app.
+  tut1a - Adding state and reading from that state.
+  tut1b - Demo query reader aspects.
   (more to come)
 
 ## Usage

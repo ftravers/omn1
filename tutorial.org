@@ -1,3 +1,7 @@
+To publish this tutorial as html do:
+
+~C-c C-e h h~
+
 * Tutorial 0: Initial Project
 
 How to creat an absolute shell of a project:
@@ -69,3 +73,12 @@ Finally the rest is just wiring the different parts together.  We set
 the reader in the parser.  The reconciler connects the parser to the
 app state.  Finally this more full fledged reconciler is connected to
 the component via the ~add-root!~ function.
+
+* Tutorial 1b: Demo query reader decoupling
+
+In this version of the code we demonstrate the decoupling of the keys
+of the query from what the reader returns.  Our reader now effectively
+ignores the key we pass it, and we reference ~:blah~ only in our
+component.  Okay this is a bit of a useless reader as it only ever
+returns the title.
+

@@ -11,7 +11,7 @@
 (defmethod readr :default
   [env keyz parms]
   (let [state (:state env)
-        val (keyz @state)]
+        val (:title @state)]
     {:value val}))
 
 (def parser (om/parser {:read readr}))
@@ -23,11 +23,11 @@
 
 (defui HelloWorld
   static om/IQuery
-  (query [this] [:title])
+  (query [this] [:blah])
   Object
   (render
    [this]
-   (let [title (:title (om/props this))]
+   (let [title (:blah (om/props this))]
      (dom/div nil title))))
 
 (om/add-root!
