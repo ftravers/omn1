@@ -1,15 +1,27 @@
 (ns omn1.recon
   (:require [om.next :as om]))
 
-(defonce my-state (atom {:title "Hello World 2!"}))
+;; (defonce my-state
+;;   (atom {:current-user {:email "bob.smith@gmail.com"}
+;;          :items [{:id 0 :title "Foo"}
+;;                  {:id 1 :title "Bar"}
+;;                  {:id 2 :title "Baz"}]}))
+
+(def my-state (atom {:title "Hello World!"}))
 
 (defmulti readr om/dispatch)
 
 (defmethod readr :default
-  [env keyz parms]
-  (let [state (:state env)
-        val (keyz @state)]
-    {:value val}))
+  [{:keys [query state]} k _]
+  (let [st @state]
+    (.log js/console (str st))
+    {:value (om/db->tree query (get st k) st)}))
+
+;; (defmethod readr :default
+;;   [env keyz parms]
+;;   (let [state (:state env)
+;;         val (keyz @state)]
+;;     {:value val}))
 
 (def parser (om/parser {:read readr}))
 
@@ -17,4 +29,3 @@
   (om/reconciler
    {:state my-state
     :parser parser}))
-

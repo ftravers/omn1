@@ -5,7 +5,9 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.9.0-alpha14"]
                  [org.clojure/clojurescript "1.9.293"]
-                 [org.omcljs/om "1.0.0-alpha47"]]
+                 [org.omcljs/om "1.0.0-alpha47"]
+                 ;; [datascript "0.15.3"]
+                 ]
   :source-paths ["src/cljc"]
   :clean-targets ^{:protect false} ["target" "resources/public/js"]
   :target-path "target/%s"

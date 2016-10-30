@@ -1,3 +1,10 @@
+TODO: try running the parser with the om/get-query Component call.
+
+(parser {:state state} (om/get-query SomeList))
+;; => [{:items [:id :title]}]
+
+do this in the cljs REPL.
+
 To publish this tutorial as html do:
 
 ~C-c C-e h h~
@@ -134,3 +141,38 @@ omn1.recon>
 So you see we passed in some query, and we can see what the results of
 parsing that query with our state is.  Now we can work on a big chunk
 of our Web App without having to use a browser/figwheel, thats cool!
+
+* Tutorial 3: Identity
+
+#+BEGIN_SRC clojure
+(recon/parser {:state recon/my-state} (om/get-query HelloWorld))
+#+END_SRC 
+
+Now things start to get a bit more interesting.  The way om-next works
+is that the component at the root of the tree is responsible for
+getting all the data that the application requires.  Often we want to
+display data that is a bit hierarchical.  So we might have an
+interface that conceptually looks like:
+
+Player: Fenton
+
+Age: 21
+
+Games Played:
+
+| Date/Time    | Score |
+|--------------+-------|
+| Oct 21, 2016 |    23 |
+| Oct 22, 2016 |    50 |
+| Nov 7, 2016  |    76 |
+
+
+Now the way that we'll code this is that there will be a component
+that displays each row, and a root component that shows the player,
+age, and it will include the table of scores/dates.  So this will be a
+sort of tree.
+
+This tutorial draws inspiration from
+https://github.com/omcljs/om/wiki/Thinking-With-Links%21
+
+
