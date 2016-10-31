@@ -23,9 +23,11 @@ TODO: try running the parser with the om/get-query Component call.
 
 do this in the cljs REPL.
 
-To publish this tutorial as html do:
+To publish this tutorial as &#x2026;
 
-`C-c C-e h h`
+html: `C-c C-e h h`
+
+markdown: `C-c C-e m m`
 
 # Tutorial 0: Initial Project<a id="sec-1" name="sec-1"></a>
 
