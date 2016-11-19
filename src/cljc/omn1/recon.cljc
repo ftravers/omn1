@@ -1,5 +1,5 @@
 (ns omn1.recon
-  (:require [om.next :as om]))
+  (:require [om.next :as om :refer-macros [defui]]))
 
 ;; (defonce my-state
 ;;   (atom {:current-user {:email "bob.smith@gmail.com"}
@@ -14,7 +14,7 @@
 (defmethod readr :default
   [{:keys [query state]} k _]
   (let [st @state]
-    (.log js/console (str st))
+    ;; (.log js/console (str st))
     {:value (om/db->tree query (get st k) st)}))
 
 ;; (defmethod readr :default
@@ -29,3 +29,8 @@
   (om/reconciler
    {:state my-state
     :parser parser}))
+
+;; (defui Blah
+;;   static om/IQuery
+;;   (query [this] [:me-mail])
+;;   Object (render [this]))
