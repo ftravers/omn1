@@ -1,0 +1,31 @@
+Your database structure.
+
+A big part of om-next is that it creates norms about how to store you
+application data.  Often we have pieces of data that appear in
+multiple places in our UI.  Naturally, if it is the same data in
+multiple places, we'd like to only have one real copy of it.  Any
+other 'copies' are actually references.
+
+To store data in om-next you follow this structure:
+
+#+BEGIN_SRC clojure
+(def app-state { :keyword { id real-information }})
+#+END_SRC
+
+or a real example:
+
+#+BEGIN_SRC clojure
+  (def app-state {:curr-user { "fenton.travers@gmail.com" {:age 21 :height 183}}})
+#+END_SRC
+
+We can now add a second location that 'refers' to the first like so:
+
+#+BEGIN_SRC clojure
+  (def app-state {:app-owner [:curr-user "fenton.travers@gmail.com"]
+                  :curr-user { "fenton.travers@gmail.com" {:age 21 :height 183}}})
+#+END_SRC
+
+The format: ~[:keyword id]~ is called an ~ident~.  Its a reference to
+some shared data.
+
+

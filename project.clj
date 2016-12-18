@@ -6,14 +6,16 @@
   :dependencies [[org.clojure/clojure "1.9.0-alpha14"]
                  [org.clojure/clojurescript "1.9.293"]
                  [org.omcljs/om "1.0.0-alpha47-SNAPSHOT"]
+                 [com.taoensso/timbre "4.7.4"]
                  ;; [datascript "0.15.3"]
                  ]
-  :source-paths ["src/cljc"]
+  :source-paths ["src/cljc" "src/cljs"]
   :clean-targets ^{:protect false} ["target" "resources/public/js"]
   :target-path "target/%s"
   :plugins [[lein-figwheel "0.5.4-7"]
             [lein-cljsbuild "1.1.4" :exclusions [[org.clojure/clojure]]]
-            [cider/cider-nrepl "0.14.0-SNAPSHOT"]]
+            [cider/cider-nrepl "0.15.0-SNAPSHOT"]
+            [com.billpiel/sayid "0.0.10"]]
   :cljsbuild {:builds
               [{:id "dev"
                 :source-paths ["src/cljs" "src/cljc"]
@@ -27,7 +29,7 @@
   :profiles {:dev {:dependencies [[org.clojure/tools.namespace "0.2.11"]
                                   [figwheel-sidecar "0.5.4-7"]                                   
                                   [com.cemerick/piggieback "0.2.1"]]
-                   :source-paths ["src/cljc" "src/clj"]
+                   :source-paths ["src/cljc" "src/cljs"]
                    :repl-options {:init (set! *print-length* 50)
                                   :nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}}
              :uberjar {:aot :all}})
