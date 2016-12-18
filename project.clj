@@ -5,10 +5,7 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.9.0-alpha14"]
                  [org.clojure/clojurescript "1.9.293"]
-                 [org.omcljs/om "1.0.0-alpha47-SNAPSHOT"]
-                 [com.taoensso/timbre "4.7.4"]
-                 ;; [datascript "0.15.3"]
-                 ]
+                 [org.omcljs/om "1.0.0-alpha47-SNAPSHOT"]]
   :source-paths ["src/cljc" "src/cljs"]
   :clean-targets ^{:protect false} ["target" "resources/public/js"]
   :target-path "target/%s"
@@ -20,7 +17,7 @@
               [{:id "dev"
                 :source-paths ["src/cljs" "src/cljc"]
                 :figwheel true
-                :compiler {:main omn1.core
+                :compiler {:main omn1.webpage
                            :asset-path "js"
                            :output-to "resources/public/js/main.js"
                            :output-dir "resources/public/js"
