@@ -8,7 +8,7 @@
 
 (defn log
   ([msg]
-   (->> msg #?(:cljs (.log js/console)
+   (->> (str msg) #?(:cljs (.log js/console)
                :clj println)))
   ([title msg]
    (log (str title msg))))

@@ -1,9 +1,14 @@
 (ns omn1.webpage
   (:require
-   [om.next :as om :refer-macros [defui]]
-   [om.dom :as dom :refer [div ul li]]
-   [goog.dom :as gdom]
-   [omn1.data :as dat]))
+   #?@(:cljs
+       [[om.next :as om :refer-macros [defui]]
+        [om.dom :as dom :refer [div ul li]]
+        [goog.dom :as gdom]
+        [omn1.data :as dat]]
+       :clj
+       [[om.next :as om :refer-macros [defui]]
+        [om.dom :as dom :refer [div ul li]]
+        [omn1.data :as dat]])))
 
 (defui Car
   static om/Ident
@@ -32,10 +37,15 @@
    [this]
    (let [{user :current/user cars :my-cars} (om/props this)]
      (div nil (div nil (str "Current User: " (:user/name user)))
-      (ul nil
-          (map car cars) )))))
+          (ul nil
+              (map car cars))))))
 
-(om/add-root! dat/reconciler MyCars (gdom/getElement "app"))
+#?(:cljs
+   (om/add-root! dat/reconciler MyCars (gdom/getElement "app")))
 
+;; ------------ test functions
+
+(def simple-factory (om/factory SimpleComponent))
+(dom/render-to-str (simple-factory))
 (om/component? MyCars)
 (om/get-query MyCars)

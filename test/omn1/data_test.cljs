@@ -6,11 +6,12 @@
 
 (enable-console-print!)
 
-(deftest test-numbers
-  (let [data {:current/user {:user/name "Fenton"}
+(def data {:current/user {:user/name "Fenton"}
               :my-cars [{:id 1 :make "Toyota" :model "Tacoma" :year "2013"}
-                        {:id 2 :make "BMW" :model "325xi" :year "2001"}]}
-        query [:current/user]]
+                        {:id 2 :make "BMW" :model "325xi" :year "2001"}]})
+
+(deftest test-numbers
+  (let [query [:current/user]]
     (is (=
          {:current/user {:user/name "Fenton"}}
          (om/db->tree [:current/user] data data)))))
