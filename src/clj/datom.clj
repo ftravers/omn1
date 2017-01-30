@@ -1,4 +1,4 @@
-(ns datom
+(ns omn1.datom
   (:require [datomic.api :as d]
             [clojure.core.async :refer [go <! timeout]]
             [clojure.tools.logging :refer [debug]]))
@@ -20,6 +20,12 @@
     :db/ident :user/email-ref
     :db/valueType :db.type/ref
     :db/cardinality :db.cardinality/one
+    :db.install/_attribute :db.part/db}
+   {:db/doc "List of cars a user owns"
+    :db/id #db/id[:db.part/db]
+    :db/ident :user/cars
+    :db/valueType :db.type/ref
+    :db/cardinality :db.cardinality/many
     :db.install/_attribute :db.part/db}
    {:db/doc "Car make"
     :db/id #db/id[:db.part/db]
@@ -59,7 +65,10 @@
     :car/make "BMW"
     :car/model "325xi"
     :year 2001
-    :user/email-ref {:db/id #db/id[:db.part/user -1]}}])
+    :user/email-ref {:db/id #db/id[:db.part/user -1]}}
+   {:db/id #db/id[:db.part/user -1]
+    :user/cars [{:db/id #db/id[:db.part/user -2]}
+                {:db/id #db/id[:db.part/user -3]}]}])
 
 (defn reload-dbs
   ([]
@@ -78,5 +87,21 @@
          [?e :user/email-ref [:user/email "fenton.travers@gmail.com"]]]
        (d/db (d/connect db-url))))
 
+(defn q2 []
+  (d/q
+   '[:find
+     (pull
+      ?e
+      [:user/age :user/email {:user/cars [:car/make]}])
+
+     :where
+     [?e :user/email "fenton.travers@gmail.com"]]
+   (d/db (d/connect db-url))))
+
 (defn dq1 []
   (q1))
+
+;; [:current/user {:user/cars [:id :car/make :car/model :year]}]
+;; [:current/user {:my-cars [:id :make :model :year]}]
+
+

@@ -14,8 +14,9 @@
 (declare sq)
 
 (def app-state
-  (atom {:current/user {:user/name "Tim"}
-         :my-cars []}))
+  (atom {:current/user {:user/email "tim.jones@yahoo.ca"
+                        :user/age 55}
+         :user/cars [{:id 1 :car/make "Subaru" :car/model "Forester" :year 2001}]}))
 
 (defmulti reader om/dispatch)
 
@@ -36,9 +37,10 @@
   (log "remote query: " qry)
   (go
     (<! (timeout 2000))
-    (cb {:current/user {:user/name "Fenton"}
-         :my-cars [{:id 1 :make "Toyota" :model "Tacoma" :year "2013"}
-                   {:id 2 :make "BMW" :model "325xi" :year "2001"}]})))
+    (cb {:current/user {:user/email "fenton.travers@gmail.com"
+                        :user/age 43}
+         :user/cars [{:id 1 :car/make "Toyota" :car/model "Tacoma" :year "2013"}
+                     {:id 2 :car/make "BMW" :car/model "325xi" :year "2001"}]})))
 
 (def reconciler
   (om/reconciler
