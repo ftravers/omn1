@@ -2,12 +2,12 @@
   (:require
    #?@(:cljs
        [[om.next :as om :refer-macros [defui]]
-        [om.dom :as dom :refer [div ul li]]
+        [om.dom :as dom :refer [div ul li table tr td th thead tbody]]
         [goog.dom :as gdom]
         [omn1.data :as dat]]
        :clj
        [[om.next :as om :refer [defui]]
-        [om.dom :as dom :refer [div ul li]]
+        [om.dom :as dom :refer [div ul li table tr td th]]
         [omn1.data :as dat]])))
 
 (defui Car
@@ -20,11 +20,11 @@
   (render
    [this]
    (let [{id :id make :car/make model :car/model year :year} (om/props this)]
-     (li nil
-         (str "Make: " make
-              ". Model: " model
-              ". Year: " year
-              ". ID: " id)))))
+     (tr nil
+         (td nil make)
+         (td nil model)
+         (td nil year)
+         (td nil id)))))
 
 (def car (om/factory Car {:keyfn :id}))
 
@@ -39,8 +39,16 @@
           (div nil (str "Current User: " (:user/email user)))
           (div nil (str "Age: " (:user/age user)))
           (div nil "User Cars:")
-          (ul nil
-              (map car cars))))))
+          (table
+           nil
+           (thead
+            nil
+            (tr nil
+                (th nil "Make")
+                (th nil "Model")
+                (th nil "Year")
+                (th nil "ID")))
+           (tbody nil (map car cars)))))))
 
 #?(:cljs
    (om/add-root! dat/reconciler MyCars (gdom/getElement "app")))

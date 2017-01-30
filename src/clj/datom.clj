@@ -102,6 +102,3 @@
   (q1))
 
 ;; [:current/user {:user/cars [:id :car/make :car/model :year]}]
-;; [:current/user {:my-cars [:id :make :model :year]}]
-
-
