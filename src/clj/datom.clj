@@ -87,18 +87,22 @@
          [?e :user/email-ref [:user/email "fenton.travers@gmail.com"]]]
        (d/db (d/connect db-url))))
 
-(defn q2 []
-  (d/q
-   '[:find
-     (pull
-      ?e
-      [:user/age :user/email {:user/cars [:car/make]}])
+(defn q2 [email query]
+  (first (d/q
+    '[:find
+      [(pull
+        ?e
 
-     :where
-     [?e :user/email "fenton.travers@gmail.com"]]
-   (d/db (d/connect db-url))))
+        ;; [:user/age :user/email {:user/cars [:car/make]}]
+        [:user/email :user/age #:user{:cars [:id :car/make :car/model :year]}]
+
+        ) ...]
+      :where
+      [?e :user/email "fenton.travers@gmail.com"]]
+    (d/db (d/connect db-url)))))
 
 (defn dq1 []
   (q1))
+;; [:user/email :user/age #:user{:cars [:id :car/make :car/model :year]}]
 
 ;; [:current/user {:user/cars [:id :car/make :car/model :year]}]

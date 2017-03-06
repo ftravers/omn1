@@ -1,14 +1,18 @@
 (ns omn1.webpage
-  (:require
-   #?@(:cljs
-       [[om.next :as om :refer-macros [defui]]
-        [om.dom :as dom :refer [div ul li table tr td th thead tbody]]
-        [goog.dom :as gdom]
-        [omn1.data :as dat]]
-       :clj
-       [[om.next :as om :refer [defui]]
-        [om.dom :as dom :refer [div ul li table tr td th]]
-        [omn1.data :as dat]])))
+  #?(:cljs
+     (:require
+      [om.next :as om :refer-macros [defui]]
+      [om.dom :as dom :refer [div ul li table tr td th thead tbody]]
+      [goog.dom :as gdom]
+      [omn1.data :as dat]
+      [taoensso.timbre :refer-macros [info]])
+     :clj
+     (:require
+      [om.next :as om :refer [defui]]
+      [om.dom :as dom :refer [div ul li table tr td th thead tbody]]
+      [omn1.data :as dat])))
+
+(taoensso.timbre/merge-config! {:level :error :ns-blacklist ["omn1.*"]} )
 
 (defui Car
   static om/Ident
@@ -30,32 +34,30 @@
 
 (defui MyCars
   static om/IQuery
-  (query [this] [:current/user {:user/cars (om/get-query Car)}])
+  (query [this] [:user/email :user/age {:user/cars (om/get-query Car)}])
   Object
   (render
    [this]
-   (let [{user :current/user cars :user/cars} (om/props this)]
+   (let [{email :user/email age :user/age cars :user/cars} (om/props this)]
      (div nil
-          (div nil (str "Current User: " (:user/email user)))
-          (div nil (str "Age: " (:user/age user)))
+          (div nil (str "Current User: " email))
+          (div nil (str "Age: " age))
           (div nil "User Cars:")
-          (table
-           nil
-           (thead
-            nil
-            (tr nil
-                (th nil "Make")
-                (th nil "Model")
-                (th nil "Year")
-                (th nil "ID")))
-           (tbody nil (map car cars)))))))
+          (table nil
+                 (thead nil
+                        (tr nil
+                            (th nil "Make")
+                            (th nil "Model")
+                            (th nil "Year")
+                            (th nil "ID")))
+                 (tbody nil (map car cars)))))))
 
 #?(:cljs
    (om/add-root! dat/reconciler MyCars (gdom/getElement "app")))
 
 ;; ------------ test functions
 
-(def simple-factory (om/factory MyCars))
-(dom/render-to-str (simple-factory))
-(om/component? MyCars)
-(om/get-query MyCars)
+#?(:clj (do (def simple-factory (om/factory MyCars))
+            (dom/render-to-str (simple-factory))
+            (om/component? MyCars)
+            (om/get-query MyCars)))

@@ -1,20 +1,3 @@
-<div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">1. Overview</a></li>
-<li><a href="#sec-2">2. Tutorial 0: Hello World</a>
-<ul>
-<li><a href="#sec-2-1">2.1. Testing</a></li>
-</ul>
-</li>
-<li><a href="#sec-3">3. Tutorial 1a: Adding state and reading from it</a></li>
-<li><a href="#sec-4">4. Tutorial 1b: Demo query reader decoupling</a></li>
-<li><a href="#sec-5">5. Tutorial 2: Move pieces around</a></li>
-<li><a href="#sec-6">6. Tutorial 3: Identity</a></li>
-</ul>
-</div>
-</div>
 
 # Overview<a id="sec-1" name="sec-1"></a>
 
