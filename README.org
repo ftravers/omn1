@@ -7,7 +7,7 @@ Very big parts of this exercise are the shape of the data and querying
 the data.  Lets look at how we might structure some data on the
 backend (datomic) first.
 
-* Datomic (Backend)
+* Datomic - the backend
 
 ** Data Structure
 
@@ -31,7 +31,12 @@ Imagine we have datomic data that looks like:
                {:db/id 2}]}
 #+END_SRC
 
-We can see the ~:user/cars~ field points to an array of cars.
+We can see the ~:user/cars~ field points to an array of cars that
+fenton owns.
+
+*NOTE:* I'm simplifying some aspects of this tutorial because I want
+to keep focused on conceptual simplicity over absolute syntactical
+correctness.
 
 In datomic we can use *pull* syntax to indicate which data we want.  A
 valid pull /query/ would look like:
@@ -43,27 +48,23 @@ valid pull /query/ would look like:
     [:db/id :car/make :car/model :year]}]
 #+END_SRC
 
-Datomic will happily /hydrate/ this /query/ to become:
+which datomic will happily /hydrate/, or fill out the fields of this
+/query/ to become:
 
 #+BEGIN_SRC clojure
 #:user{:email "fenton.travers@gmail.com",
        :age 43,
        :cars
-       [{:db/id 17592186045419,
+       [{:db/id 1,
          :car/make "Toyota",
          :car/model "Tacomaaaa",
          :year 2013}
-        {:db/id 17592186045420,
+        {:db/id 2,
          :car/make "BMW",
          :car/model "325xi",
          :year 2001}]}
 #+END_SRC
 
-Okay, I cheated a little on the original ~:db/id~'s, in reality
-inserting test data ~:db/id~'s looks more like: ~:db/id
-#db/id[:db.part/user -1]~, but I want to keep this tutorial focused on
-conceptual simplicity over absolute correctness.  I'll try to point
-out where that occurs.
 * Front End (om-next)
 
 Now we need to structure the front end so we can easily get this info
@@ -73,6 +74,9 @@ So in om-next we'd normally construct this as two components.  One is
 the parent component which would display the email and age of the
 user, then we'd have a table that shows the cars they own.  The two
 rows of the table are another component that is reused for each row.
+
+
+
 * Database Structure
 
 A big part of om-next is that it creates norms about how to store you
