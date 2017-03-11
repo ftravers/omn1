@@ -17,12 +17,17 @@
 
 (declare sq)
 
+;; (def app-state
+;;   (atom
+;;    {:user/email "fenton.travers@gmail.com"
+;;     :user/age 55
+;;     :user/cars
+;;     [{:id 1 :car/make "Subaru" :car/model "Forester" :year 2001}]}))
+
 (def app-state
-  (atom
-   {:user/email "fenton.travers@gmail.com"
-    :user/age 55
-    :user/cars
-    [{:id 1 :car/make "Subaru" :car/model "Forester" :year 2001}]}))
+  (atom {:curr-user {"fenton.travers@gmail.com" {:age 21 :height 183}}
+         :user/cars [{:id 1 :car/make "Subaru" :car/model "Forester" :year 2001}]
+         :app-owner [:curr-user "fenton.travers@gmail.com"]}))
 
 #?(:cljs (swap! app-state assoc :async-websocket (async-websocket "ws://localhost:7890")))
 
@@ -78,10 +83,18 @@
 ;; ----------------- testing functions ----------------
 
 (defn qry1 []
-  (go )
-  )
+  (go))
 
 (defn rn []
   [(parser {:state app-state} [:current/user] :remote)
    (parser {:state app-state} [:my-cars] :remote)])
 
+;; (defn wst []
+;;   (let [url "ws://192.168.0.98:7890" aws (async-websocket url)]
+;;     (go (>! aws "{ \"type\": \"list_connected_devices\" }"))
+;;     (go (js/console.log (<! aws)))))
+
+(defn wst []
+  (let [aws (async-websocket "ws://localhost:7890")]
+    (go (>! aws "bala"))
+    (go (.log js/console (str (<! aws))))))
