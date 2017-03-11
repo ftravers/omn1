@@ -1,19 +1,12 @@
 (ns omn1.data
-  #?(:cljs
-     (:require
-      [om.next :as om]
-      [omn1.utils :refer [log]]
-      [cljs.core.async :refer [timeout <! >!]]
-      [websocket-client.core :refer [async-websocket]]
-      [taoensso.timbre :refer-macros [info]])
-     :clj
-     (:require
-      [clojure.core.async :refer [go <! >! timeout]]
-      [om.next :as om]
-      [omn1.utils :refer [log]]
-      ))
+  (:require
+   [om.next :as om]
+   [omn1.utils :refer [log]]
+   [cljs.core.async :refer [timeout <! >!]]
+   [websocket-client.core :refer [async-websocket]]
+   [taoensso.timbre :refer-macros [info]])
 
-  #?(:cljs (:require-macros [cljs.core.async.macros :refer [go]])))
+  (:require-macros [cljs.core.async.macros :refer [go]]))
 
 (declare sq)
 
@@ -29,7 +22,7 @@
          :user/cars [{:id 1 :car/make "Subaru" :car/model "Forester" :year 2001}]
          :app-owner [:curr-user "fenton.travers@gmail.com"]}))
 
-#?(:cljs (swap! app-state assoc :async-websocket (async-websocket "ws://localhost:7890")))
+(swap! app-state assoc :async-websocket (async-websocket "ws://localhost:7890"))
 
 (defmulti reader om/dispatch)
 

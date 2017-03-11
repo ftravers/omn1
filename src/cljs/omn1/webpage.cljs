@@ -1,16 +1,10 @@
 (ns omn1.webpage
-  #?(:cljs
-     (:require
-      [om.next :as om :refer-macros [defui]]
-      [om.dom :as dom :refer [div ul li table tr td th thead tbody]]
-      [goog.dom :as gdom]
-      [omn1.data :as dat]
-      [taoensso.timbre :refer-macros [info]])
-     :clj
-     (:require
-      [om.next :as om :refer [defui]]
-      [om.dom :as dom :refer [div ul li table tr td th thead tbody]]
-      [omn1.data :as dat])))
+  (:require
+   [om.next :as om :refer-macros [defui]]
+   [om.dom :as dom :refer [div ul li table tr td th thead tbody]]
+   [goog.dom :as gdom]
+   [omn1.data :as dat]
+   [taoensso.timbre :refer-macros [info]]))
 
 (taoensso.timbre/merge-config! {:level :error :ns-blacklist ["omn1.*"]} )
 
@@ -52,12 +46,11 @@
                             (th nil "ID")))
                  (tbody nil (map car cars)))))))
 
-#?(:cljs
-   (om/add-root! dat/reconciler MyCars (gdom/getElement "app")))
+(om/add-root! dat/reconciler MyCars (gdom/getElement "app"))
 
 ;; ------------ test functions
 
-#?(:clj (do (def simple-factory (om/factory MyCars))
-            (dom/render-to-str (simple-factory))
-            (om/component? MyCars)
-            (om/get-query MyCars)))
+;; #?(:clj (do (def simple-factory (om/factory MyCars))
+;;             (dom/render-to-str (simple-factory))
+;;             (om/component? MyCars)
+;;             (om/get-query MyCars)))
