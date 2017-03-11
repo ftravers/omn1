@@ -59,7 +59,7 @@ Datomic will happily /hydrate/ this /query/ to become:
          :year 2001}]}
 #+END_SRC
 
-Okay, I cheate a little on the original ~:db/id~'s, in reality
+Okay, I cheated a little on the original ~:db/id~'s, in reality
 inserting test data ~:db/id~'s looks more like: ~:db/id
 #db/id[:db.part/user -1]~, but I want to keep this tutorial focused on
 conceptual simplicity over absolute correctness.  I'll try to point
