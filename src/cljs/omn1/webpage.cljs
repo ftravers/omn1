@@ -13,11 +13,11 @@
   (ident [this {:keys [id]}]
          [:car/by-id id])
   static om/IQuery
-  (query [this] [:id :car/make :car/model :year])
+  (query [this] [:db/id :car/make :car/model :year])
   Object
   (render
    [this]
-   (let [{id :id make :car/make model :car/model year :year} (om/props this)]
+   (let [{id :db/id make :car/make model :car/model year :year} (om/props this)]
      (tr nil
          (td nil make)
          (td nil model)
@@ -26,7 +26,7 @@
 
 (def car (om/factory Car {:keyfn :id}))
 
-(defui MyCars
+(defui UserCars
   static om/IQuery
   (query [this] [:user/email :user/age {:user/cars (om/get-query Car)}])
   Object
@@ -46,11 +46,11 @@
                             (th nil "ID")))
                  (tbody nil (map car cars)))))))
 
-(om/add-root! dat/reconciler MyCars (gdom/getElement "app"))
+(om/add-root! dat/reconciler UserCars (gdom/getElement "app"))
 
 ;; ------------ test functions
 
-;; #?(:clj (do (def simple-factory (om/factory MyCars))
+;; #?(:clj (do (def simple-factory (om/factory UserCars))
 ;;             (dom/render-to-str (simple-factory))
-;;             (om/component? MyCars)
-;;             (om/get-query MyCars)))
+;;             (om/component? UserCars)
+;;             (om/get-query UserCars)))
