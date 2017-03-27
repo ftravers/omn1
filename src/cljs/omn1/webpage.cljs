@@ -8,10 +8,17 @@
 
 (taoensso.timbre/merge-config! {:level :error :ns-blacklist ["omn1.*"]} )
 
+;; This method takes the props the component will receive (or has
+;; received) and return a unique identifier.
+
+;; Car will receive:
+;; {id {:car/make "Subaru" :car/model "Forester" :year 2001}}
+
 (defui Car
   static om/Ident
-  (ident [this {:keys [id]}]
-         [:car/by-id id])
+  (ident [this props]
+         (let [id (first (keys props))]
+           [:car/by-id id]))
   static om/IQuery
   (query [this] [:db/id :car/make :car/model :year])
   Object
@@ -24,18 +31,30 @@
          (td nil year)
          (td nil id)))))
 
-(def car (om/factory Car {:keyfn :id}))
+(defn keyfn [props]
+  (first (keys props)))
+
+(def car (om/factory Car {:keyfn keyfn}))
 
 (defui UserCars
   static om/IQuery
-  (query [this] [:user/email :user/age {:user/cars (om/get-query Car)}])
+  (query [this] [:curr-user {:user/cars (om/get-query Car)}])
   Object
   (render
    [this]
-   (let [{email :user/email age :user/age cars :user/cars} (om/props this)]
+   (.log js/console (str "UserCars props: " (om/props this)))
+   (let [props (om/props this)
+         {cars :user/cars curr-user :curr-user} props
+         email (first (keys curr-user))
+         cu-data (get curr-user email)
+         {age :age height :height} cu-data]
+     (.log js/console (str "Email: " email))
+     (.log js/console (str "Curr User Data: " cu-data))
+     (.log js/console (str "Cars: " cars))
      (div nil
           (div nil (str "Current User: " email))
           (div nil (str "Age: " age))
+          (div nil (str "Height: " height))
           (div nil "User Cars:")
           (table nil
                  (thead nil

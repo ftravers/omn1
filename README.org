@@ -1,14 +1,27 @@
+* About These Tutorials
+
+These tutorials are aimed at a beginner audience.  They try to be
+brief yet complete.  Less can be more.  However I try not to leave any
+detail out either.  Gaps in explanation can lead to confusion.
+
+In summary I hope for these tutorials to be short, complete and
+approachable for beginners.  I appreciate constructive feedback, so
+let me know if, in your opinion, I fail or succeed to achieve these
+goals.
+
 * Overview
 
 This tutorial will try to explain how to make the simplest
 client/server app using om-next and datomic respectively.
 
-Very big parts of this exercise are the shape of the data and querying
-the data.  Lets look at how we might structure some data on the
-backend (datomic) first.
+If you are not familiar with Datomic, I suggest you checkout [[https://www.reddit.com/r/Clojure/comments/5zu1oc/my_datomic_tutorial_feedback_sought/][my
+ tutorial]] on it.
+
+Very big parts of this task have to do with the shape of the data and
+querying the data.  Lets look at how we might structure some data on
+the backend (datomic) first.
 
 * Datomic - the backend
-
 ** Data Structure
 
 Imagine we have datomic data that looks like:
@@ -25,8 +38,8 @@ Imagine we have datomic data that looks like:
    :year 2001}
 
   {:db/id 3 
-   :user/email "fenton.travers@gmail.com"
-   :user/age 43
+   :user/user "ftravers"
+   :user/age 54
    :user/cars [{:db/id 1}
                {:db/id 2}]}
 #+END_SRC
@@ -42,7 +55,7 @@ In datomic we can use *pull* syntax to indicate which data we want.  A
 valid pull /query/ would look like:
 
 #+BEGIN_SRC clojure
-  [:user/email
+  [:user/name
    :user/age
    {:user/cars
     [:db/id :car/make :car/model :year]}]
@@ -52,7 +65,7 @@ which datomic will happily /hydrate/, or fill out the fields of this
 /query/ to become:
 
 #+BEGIN_SRC clojure
-#:user{:email "fenton.travers@gmail.com",
+#:user{:email "ftravers",
        :age 43,
        :cars
        [{:db/id 1,
@@ -87,7 +100,7 @@ have something like:
     (query [this] [:db/id :car/make :car/model :year]))
 
   (defui MyCars
-    (query [this] [:user/email :user/age {:user/cars (om/get-query Car)}]))
+    (query [this] [:user/name :user/age {:user/cars (om/get-query Car)}]))
 #+END_SRC
 
 Now om-next will create one combined query which we can pass along to
@@ -96,7 +109,7 @@ datomic to /hydrate/.
 So the final full query looks like:
 
 #+BEGIN_SRC clojure
-  [:user/email
+  [:user/name
    :user/age
    {:user/cars
     [:db/id :car/make :car/model :year]}]
@@ -112,15 +125,17 @@ structure.
 Om-next remotes are handled in a function definition.  This function
 can be passed anything that the reader has.  A good place to look at
 what it is sent is this URL: [[https://awkay.github.io/om-tutorial/#!/om_tutorial.E_State_Reads_and_Parsing][Alan Kay om-next tutorial - State Reads]].
+Its a long page without anchors so go to section: "Implementing Read",
+then scroll down to the numbered list where he describes the three
+parameters passed into ~read~.
 
 The last parameter your remote handling function will recieve is a
-callback function that you should call with the results of your actual
-server side response.  Critical here is the shape of your local state
-store, and the data that you are passing into the callback.
+callback function that you should be called with the results of your
+actual server side response.  Critical here is the shape of your local
+state store, and the data that you are passing into the callback.
 
 Lets look at the aspect of returning data from a remote function and
 seeing how/what is able to be merged into your local state store.
-
 
 #+BEGIN_SRC clojure
 
@@ -143,14 +158,14 @@ To store data in om-next you follow this structure:
 or a real example:
 
 #+BEGIN_SRC clojure
-  (def app-state {:curr-user { "fenton.travers@gmail.com" {:age 21 :height 183}}})
+  (def app-state {:curr-user { "ftravers" {:age 21 :height 183}}})
 #+END_SRC
 
 We can now add a second location that 'refers' to the first like so:
 
 #+BEGIN_SRC clojure
-  (def app-state {:app-owner [:curr-user "fenton.travers@gmail.com"]
-                  :curr-user { "fenton.travers@gmail.com" {:age 21 :height 183}}})
+  (def app-state {:app-owner [:curr-user "ftravers"]
+                  :curr-user { "ftravers" {:age 21 :height 183}}})
 #+END_SRC
 
 The format: ~[:keyword id]~ is called an ~ident~.  Its a reference to
