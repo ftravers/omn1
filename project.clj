@@ -8,6 +8,7 @@
                  [org.omcljs/om "1.0.0-alpha48-SNAPSHOT"]
                  [com.datomic/datomic-free "0.9.5344" :exclusions [joda-time org.slf4j/slf4j-nop]]
                  [com.taoensso/timbre "4.8.0"]
+                 [binaryage/devtools "0.9.2"]
                  [fentontravers/websocket-client "0.4.5"]]
   :source-paths ["src/clj" "src/cljc"]
   :clean-targets ^{:protect false} ["target" "resources/public/js"]
@@ -18,13 +19,14 @@
             [com.billpiel/sayid "0.0.10"]]
   :cljsbuild {:builds
               [{:id "dev"
-                :source-paths ["src/cljs" "src/cljc"]
+                :source-paths ["src/cljs" "src/cljc" "dev"]
                 :figwheel true
                 :compiler {:main omn1.webpage
                            :asset-path "js"
                            :output-to "resources/public/js/main.js"
                            :output-dir "resources/public/js"
                            :verbose true
+                           :preloads [devtools.preload]
                            :source-map-timestamp true}}]}
   :profiles {:dev {:dependencies [;; [org.clojure/tools.namespace "0.2.11"]
                                   [figwheel-sidecar "0.5.9"]                                   
