@@ -9,26 +9,28 @@
 (defui Greeter
   static om/IQuery
   (query [_] [:name])
-
   Object
   (render
    [this]
-   (log "Greeter Component Props" (om/props this))
    (div nil "Hello " (:name (om/props this)))))
 
 (defmulti reader om/dispatch)
 
 (defmethod reader :default
   [{st :state} key _]
-  (log "Default Reader Key" key)
-  (log "State" @st)
-  (let [omdb-tree (om/db->tree [key] @st @st)
-        resp {:value (key omdb-tree)}]
-    (log "Om DB->tree" omdb-tree)
-    (log "Responding With" resp)
-    resp))
+  {:value (key (om/db->tree [key] @st @st))})
 
-(def parser (om/parser {:read reader}))
+(defmulti mutate om/dispatch)
+
+(defmethod mutate 'new-name
+  [{state :state} ky params]
+  (log "key" ky)
+  (log "params" params)
+  (log "state" @state)
+  {:value {:keys [:name]}
+   :action #(swap! state assoc :name (:name params))})
+
+(def parser (om/parser {:read reader :mutate mutate}))
 
 (def app-state (atom {:name "Bob"}))
 
@@ -38,3 +40,8 @@
     :parser parser}))
 
 (om/add-root! reconciler Greeter (gdom/getElement "app"))
+
+;; tests
+
+(defn mut []
+  (om.next/transact! reconciler '[(new-name {:name "joe"})]))
