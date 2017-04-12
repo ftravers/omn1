@@ -15,20 +15,19 @@
    (div nil "Hello " (:name (om/props this)))))
 
 (defmulti reader om/dispatch)
+(defmulti mutate om/dispatch)
 
 (defmethod reader :default
   [{st :state} key _]
   {:value (key (om/db->tree [key] @st @st))})
-
-(defmulti mutate om/dispatch)
 
 (defmethod mutate 'new-name
   [{state :state} ky params]
   (log "key" ky)
   (log "params" params)
   (log "state" @state)
-  {:value {:keys [:name]}
-   :action #(swap! state assoc :name (:name params))})
+  {:value {:keys (keys params)}
+   :action #(swap! state merge params)})
 
 (def parser (om/parser {:read reader :mutate mutate}))
 
@@ -41,7 +40,4 @@
 
 (om/add-root! reconciler Greeter (gdom/getElement "app"))
 
-;; tests
 
-(defn mut []
-  (om.next/transact! reconciler '[(new-name {:name "joe"})]))
