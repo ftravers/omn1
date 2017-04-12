@@ -23,9 +23,6 @@
 
 (defmethod mutate 'new-name
   [{state :state} ky params]
-  (log "key" ky)
-  (log "params" params)
-  (log "state" @state)
   {:value {:keys (keys params)}
    :action #(swap! state merge params)})
 
@@ -39,5 +36,3 @@
     :parser parser}))
 
 (om/add-root! reconciler Greeter (gdom/getElement "app"))
-
-
