@@ -27,13 +27,12 @@
   [{st :state} key _]
   (log "default reader" key)
   {:value (key (om/db->tree [key] @st @st))
-   :remote true
-   })
+   :remote true})
 
 (defn make-remote-req
   [qry cb]
-  (log "remote reader")
-  (cb {:blah {:name "fred"}}))
+  (log "remote reader qry" qry)
+  (cb {:name "Fred"}))
 
 (def parser (om/parser {:read reader :mutate mutate}))
 
