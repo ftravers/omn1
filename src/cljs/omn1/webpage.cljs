@@ -28,7 +28,7 @@
 
 (def parser (om/parser {:read reader :mutate mutate}))
 
-(def app-state (atom {:name "Bob"}))
+(defonce app-state (atom {:name "Bobby"}))
 
 (def reconciler
   (om/reconciler
