@@ -9,7 +9,7 @@
                  [com.datomic/datomic-free "0.9.5344" :exclusions [joda-time org.slf4j/slf4j-nop]]
                  [com.taoensso/timbre "4.8.0"]
                  [binaryage/devtools "0.9.2"]
-                 [fentontravers/websocket-client "0.4.5"]]
+                 [fentontravers/websocket-client "0.4.8"]]
   :source-paths ["src/clj" "src/cljc"]
   :clean-targets ^{:protect false} ["target" "resources/public/js"]
   :target-path "target/%s"
