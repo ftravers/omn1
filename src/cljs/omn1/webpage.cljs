@@ -69,7 +69,6 @@
   [qry cb]
   (send (partial my-cb cb) qry)
   (log "qry type" (str qry))
-  (log "qry keys" (keys qry))
   ;; (log "qry vals" (type (first (ffirst (vals qry)))))
   (cb {:name "Fred"}))
 
