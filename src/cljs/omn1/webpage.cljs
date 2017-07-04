@@ -9,10 +9,15 @@
   (apply js/console.log (conj args (str "[" msg "]:"))))
 
 (defui Login
+  static om/IQueryParams
+  (params [this]
+          {:name "" :password ""})
+  
   static om/IQuery
-  (query  [_] [:user/authenticated])
+  (query  [_] '[(:user/authenticated {:user/name ?name :user/password ?password})])
+
   Object
-  (initLocalState [this] {:username "abc" :password "123"})
+  (initLocalState [this] {:username "fenton" :password "passwErd"})
   (render
    [this]
    (log "props" (om/props this))
@@ -26,22 +31,25 @@
                     :onChange
                     (fn [ev]
                       (let [value (.. ev -target -value)]
-                        (om/update-state! this assoc :username value)))})
-        (p nil)
-      
+                        (om/update-state! this assoc :username value)))}) (p nil)
         (input #js {:name "psw" :type "password" :placeholder "Enter Password"
                     :required true :value password 
                     :onChange
                     (fn [ev]
                       (let [value (.. ev -target -value)]
-                        (om/update-state! this assoc :password value)))})
-        (p nil)
-    
-        (button #js {:onClick
-                     (fn [e]
-                       (let [state (om.next/get-state this)]
-                         (om/transact! this `[(user/login {:user/name ~(:username state)
-                                                           :user/password ~(:password state)})])))} "Login"))))))
+                        (om/update-state! this assoc :password value)))}) (p nil)
+        (button
+         #js
+         {:onClick
+          (fn [e]
+            (let [state (om.next/get-state this)]
+              ;; (om/transact! this `[(user/login {:user/name ~(:username state)
+              ;;                                   :user/password ~(:password state)})])
+              (om.next/set-query!
+               this
+               {:params
+                {:name (:username state)
+                 :password (:password state)}})))} "Login"))))))
 
 (defmulti reader om/dispatch)
 
@@ -88,9 +96,13 @@
 ;;   (if-let [{{user :user/name pass :user/password} :params} args]
 ;;     (str "user:" user "pass:" pass ".")
 ;;     "user-NOT-defined"))
-(defn api
-  [args]
-  (let [{params :params} args]
-    (if params
-      (str "params:" params ".")
-      "NOT-defined")))
+;; (defn api
+;;   [{{user :user/name password :user/password token :user/token} :params}]
+;;   (println user password token)
+;;   (cond
+;;     user "user"
+;;     password "password"
+;;     token "token"
+;;     :default "default"))
+
+
