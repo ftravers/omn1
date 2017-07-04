@@ -28,15 +28,9 @@ the backend (datomic) first.
 Start the backend outside of emacs at the command prompt:
 
 #+BEGIN_SRC 
-╭─fenton@ss9 ~ ‹system› ‹master*› 
-╰─➤  cd projects/omn1be
-╭─fenton@ss9 ~/projects/omn1be ‹system› ‹upper-case*› 
-╰─➤  lein repl
-omn1be.core=> 
+cd ~/projects/omn1be; lein repl
 
 (load "websocket") (in-ns 'omn1be.websocket) (start) (in-ns 'omn1be.router)
-
-#function[clojure.lang.AFunction/1]
 #+END_SRC
 
 ** Start frontend
@@ -52,9 +46,15 @@ Open your browser at: http://localhost:3449/
 #+BEGIN_SRC clojure
 omn1.webpage>   @app-state
 {:authenticated false}
+
+;; a mutation
 omn1.webpage> (om/transact! reconciler `[(user/login {:user/name "fenton" :user/password "passwErd"})])
 omn1.webpage> @app-state
 {:authenticated false, :user/name "fenton", :user/password "welcome1"}
+
+;; a parameterized query
+omn1.webpage> (om/transact! reconciler '[(:user/authenticated {:user/name "fenton" :user/password "passwErd"})])
+
 #+END_SRC
 
 ** Testing from backend
@@ -77,7 +77,6 @@ So we can send something to the backend using:
       {:user/name "fenton"
        :user/password "passwErd"})])
 #+END_SRC
-
 
 * Datomic - the backend
 ** Data Structure

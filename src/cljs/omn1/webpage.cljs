@@ -10,15 +10,14 @@
 
 (defui Login
   static om/IQuery
-  (query  [_] [:authenticated])
+  (query  [_] [:user/authenticated])
   Object
   (initLocalState [this] {:username "abc" :password "123"})
-
   (render
    [this]
    (log "props" (om/props this))
    (let [{:keys [username password]} (om.next/get-state this)]
-     (if (:authenticated (om/props this))
+     (if (:user/authenticated (om/props this))
        (div nil "You are logged in!")
        (div
         nil
@@ -61,20 +60,20 @@
    :remote true})
 
 (defn my-cb [cb data]
-  (log "got data back" data)
-  ;; (cb data)
-  (cb {:name "Fred"}))
+  (let [read-data (cljs.reader/read-string data)]
+    (log "got data back" (str read-data))
+    (cb read-data)))
 
 (defn make-remote-req
   [qry cb]
-  (send (partial my-cb cb) qry)
-  (log "qry type" (str qry))
-  ;; (log "qry vals" (type (first (ffirst (vals qry)))))
-  (cb {:name "Fred"}))
+  (log "qry" (str qry))
+  (send (partial my-cb cb) (:remote qry))
+  ;; (cb {:user/login {:keys (:username :password), :valid-user true}})
+  )
 
 (def parser (om/parser {:read reader :mutate mutate}))
 
-(defonce app-state (atom {:authenticated false}))
+(defonce app-state (atom {:user/authenticated false}))
 
 (def reconciler
   (om/reconciler
@@ -83,3 +82,15 @@
     :send make-remote-req}))
 
 (om/add-root! reconciler Login (gdom/getElement "app"))
+
+;; (defn api
+;;   [args]
+;;   (if-let [{{user :user/name pass :user/password} :params} args]
+;;     (str "user:" user "pass:" pass ".")
+;;     "user-NOT-defined"))
+(defn api
+  [args]
+  (let [{params :params} args]
+    (if params
+      (str "params:" params ".")
+      "NOT-defined")))
