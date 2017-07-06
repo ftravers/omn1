@@ -1,5 +1,7 @@
 * Current
 
+** TODO Clean up password submission tutorial
+** DONE login button submit password
 Try to get it so that when the login button is pressed we set the
 params of the query.  When the params are updated the query should get
 rerun. 
@@ -14,4 +16,4 @@ omn1.webpage> (om/get-params (om.next/app-root reconciler))
 omn1.webpage> 
 #+END_SRC
 
-#+TITLE: Om Next Tutorial
+

@@ -9,13 +9,13 @@
   (apply js/console.log (conj args (str "[" msg "]:"))))
 
 (defui Login
+  static om/IQuery
+  (query  [_] '[(:user/authenticated {:user/name ?name :user/password ?password})])
+  
   static om/IQueryParams
   (params [this]
           {:name "" :password ""})
   
-  static om/IQuery
-  (query  [_] '[(:user/authenticated {:user/name ?name :user/password ?password})])
-
   Object
   (initLocalState [this] {:username "fenton" :password "passwErd"})
   (render
@@ -43,8 +43,6 @@
          {:onClick
           (fn [e]
             (let [state (om.next/get-state this)]
-              ;; (om/transact! this `[(user/login {:user/name ~(:username state)
-              ;;                                   :user/password ~(:password state)})])
               (om.next/set-query!
                this
                {:params
@@ -53,19 +51,12 @@
 
 (defmulti reader om/dispatch)
 
-(defmulti mutate om/dispatch)
-
-(defmethod mutate 'user/login
-  [{state :state} ky params]
-  {:value {:keys (keys params)}
-   :remote true
-   :action #(swap! state merge params)})
-
 (defmethod reader :default
   [{st :state} key _]
   (log "default reader" key)
   {:value (key (om/db->tree [key] @st @st))
-   :remote true})
+   ;; :remote true
+   :remote false})
 
 (defn my-cb [cb data]
   (let [read-data (cljs.reader/read-string data)]
@@ -75,11 +66,9 @@
 (defn make-remote-req
   [qry cb]
   (log "qry" (str qry))
-  (send (partial my-cb cb) (:remote qry))
-  ;; (cb {:user/login {:keys (:username :password), :valid-user true}})
-  )
+  (send (partial my-cb cb) (:remote qry)))
 
-(def parser (om/parser {:read reader :mutate mutate}))
+(def parser (om/parser {:read reader}))
 
 (defonce app-state (atom {:user/authenticated false}))
 
@@ -90,19 +79,3 @@
     :send make-remote-req}))
 
 (om/add-root! reconciler Login (gdom/getElement "app"))
-
-;; (defn api
-;;   [args]
-;;   (if-let [{{user :user/name pass :user/password} :params} args]
-;;     (str "user:" user "pass:" pass ".")
-;;     "user-NOT-defined"))
-;; (defn api
-;;   [{{user :user/name password :user/password token :user/token} :params}]
-;;   (println user password token)
-;;   (cond
-;;     user "user"
-;;     password "password"
-;;     token "token"
-;;     :default "default"))
-
-
