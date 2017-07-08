@@ -52,11 +52,10 @@
 (defmulti reader om/dispatch)
 
 (defmethod reader :default
-  [{st :state} key _]
-  (log "default reader" key)
+  [{st :state :as env} key _]
+  (log "default reader" key "env:target" (:target env))
   {:value (key (om/db->tree [key] @st @st))
-   ;; :remote true
-   :remote false})
+   :remote (if (= nil (:target env)) false true)})
 
 (defn my-cb [cb data]
   (let [read-data (cljs.reader/read-string data)]
