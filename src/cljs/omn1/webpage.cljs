@@ -8,46 +8,16 @@
 (defn log [msg & args]
   (apply js/console.log (conj args (str "[" msg "]:"))))
 
-(defui Login
+(defui Basic
   static om/IQuery
-  (query  [_] '[(:user/authenticated {:user/name ?name :user/password ?password})])
-  
-  static om/IQueryParams
-  (params [this]
-          {:name "" :password ""})
+  (query  [_] [:some-param])
   
   Object
-  (initLocalState [this] {:username "fenton" :password "passwErd"})
   (render
    [this]
-   (log "props" (om/props this))
-   (let [{:keys [username password]} (om.next/get-state this)]
-     (if (:user/authenticated (om/props this))
-       (div nil "You are logged in!")
-       (div
-        nil
-        (input #js {:name "uname" :type "text" :placeholder "Enter Username"
-                    :required true :value username
-                    :onChange
-                    (fn [ev]
-                      (let [value (.. ev -target -value)]
-                        (om/update-state! this assoc :username value)))}) (p nil)
-        (input #js {:name "psw" :type "password" :placeholder "Enter Password"
-                    :required true :value password 
-                    :onChange
-                    (fn [ev]
-                      (let [value (.. ev -target -value)]
-                        (om/update-state! this assoc :password value)))}) (p nil)
-        (button
-         #js
-         {:onClick
-          (fn [e]
-            (let [state (om.next/get-state this)]
-              (om.next/set-query!
-               this
-               {:params
-                {:name (:username state)
-                 :password (:password state)}})))} "Login"))))))
+   (let [props (om/props this)]
+     (log "props" props)
+     (div nil "Some Param Value: " (:some-param props)))))
 
 (defmulti reader om/dispatch)
 
@@ -57,24 +27,19 @@
   {:value (key (om/db->tree [key] @st @st))
    :remote true})
 
-(defn my-cb [cb data]
-  (let [read-data (cljs.reader/read-string data)]
-    (log "got data back" (str read-data))
-    (cb read-data)))
-
-(defn make-remote-req
+(defn my-remoter
   [qry cb]
-  (log "qry" (str qry))
-  (send (partial my-cb cb) (:remote qry)))
+  (log "remote query" (str qry))
+  (cb {:some-param "value gotten from remote!"}))
 
 (def parser (om/parser {:read reader}))
 
-(defonce app-state (atom {:user/authenticated false}))
+(defonce app-state (atom {:some-param "not much"}))
 
 (def reconciler
   (om/reconciler
    {:state app-state
     :parser parser
-    :send make-remote-req}))
+    :send my-remoter}))
 
-(om/add-root! reconciler Login (gdom/getElement "app"))
+(om/add-root! reconciler Basic (gdom/getElement "app"))
