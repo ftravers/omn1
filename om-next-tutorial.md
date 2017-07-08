@@ -190,8 +190,8 @@ We can see everytime a query is run by putting a log statement into
 our reader function.
 
     (defmethod reader :default
-      [{st :state} key _]
-      (log "default reader" key)
+      [{st :state :as env} key _]
+      (log "default reader" key "env:target" (:target env))
       {:value (key (om/db->tree [key] @st @st))
        ;; :remote true
        :remote false
@@ -201,13 +201,39 @@ Here we see a log statement at the top of the reader function.  Lets
 see what a dump of the browser console looks like and try to
 understand it.
 
-    1  [default reader]: :user/authenticated
-    2  [props]: {:user/authenticated false} 
-    3  [default reader]: :user/authenticated
-    4  [qry]: {:remote [(:user/authenticated {:user/name "", :user/password ""})]}
-    5  [got data back]: {:user/authenticated false}
-    6  [default reader]: :user/authenticated
-    7  [default reader]: :user/authenticated
+    1  [default reader]: :user/authenticated env:target null
+    2  [props]: {:user/authenticated false}
+    3  [default reader]: :user/authenticated env:target :remote
+
+In line: 1, the query of the component is run before the
+component is first loaded.
+
+In line: 2, as the component is rendered we dump the react
+properties that have been passed into the component, in this case it
+is simply the `@app-state`.
+
+This is done with line:
+
+    (log "props" (om/props this))
+
+In the component rendering.
+
+The line: 3, comes again from our `:default` reader, but this
+time it is passed for the remote called `:remote`.  By default out of
+the box in om-next we get a remote named `:remote`.  So the reader
+will get called once for a local call, and once for each remote we
+have defined.
+
+So we have traced a basic flow of a simple component.  Now lets see
+how to trigger a remote read.  When our reader is getting called with
+the `:target` a remote, if we then also return `:remote true` in our
+returned map from the reader, then our remote functions will also be
+called. 
+
+We can verify that at the REPL:
+
+    omn1.webpage> @app-state
+    {:user/authenticated false}
 
 # Send username & password<a id="sec-5" name="sec-5"></a>
 
