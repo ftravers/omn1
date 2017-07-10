@@ -53,9 +53,12 @@
 
 (defmethod reader :default
   [{st :state :as env} key _]
-  (log "default reader" key "env:target" (:target env))
-  {:value (key (om/db->tree [key] @st @st))
-   :remote true})
+  (let [result (key (om/db->tree [key] @st @st))
+        resp {:value result :remote true} ]
+    (log "reader" {:key key
+                   :env-target (:target env)
+                   :resp resp})
+    resp))
 
 (defn my-cb [cb data]
   (let [read-data (cljs.reader/read-string data)]
