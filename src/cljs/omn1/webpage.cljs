@@ -22,17 +22,23 @@
 
 (defn my-reader
   [env kee parms]
-  (.log js/console parms)
   (let [st (:state env)]
-    {:value (get @st kee)}))
+    {:value (get @st kee)
+     :remote true}))
 
 (def parser
   (om/parser {:read my-reader}))
 
+(defn remote-connection
+  [qry cb]
+  (.log js/console (str (:remote qry)))
+  (cb {:user/authenticated true}))
+
 (def reconciler
   (om/reconciler
    {:state app-state
-    :parser parser}))
+    :parser parser
+    :send remote-connection}))
 
 (om/add-root!
  reconciler
