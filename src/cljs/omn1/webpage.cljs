@@ -6,20 +6,25 @@
 
 (defui SimpleUI
   static om/IQuery
-  (query [_] [:greeting])
-  
+  (query [_] '[(:user/authenticated {:user/name ?name :user/password ?pword})])
+
+  static om/IQueryParams
+  (params [this]
+          {:name "" :pword ""})
+
   Object
   (render
    [this]
    (div nil (str (om/props this)))))
 
 (def app-state
-  (atom {:greeting "Hello World"}))
+  (atom {:user/authenticated false}))
 
 (defn my-reader
   [env kee parms]
-  (.log js/console (:target env))
-  {:value "abc"})
+  (.log js/console parms)
+  (let [st (:state env)]
+    {:value (get @st kee)}))
 
 (def parser
   (om/parser {:read my-reader}))
