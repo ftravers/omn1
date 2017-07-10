@@ -11,7 +11,7 @@
   Object
   (render
    [this]
-   (div nil (om/props this))))
+   (div nil (str (om/props this)))))
 
 (def app-state
   (atom {:greeting "Hello World"}))
@@ -19,11 +19,10 @@
 (defn my-reader
   [env kee parms]
   (.log js/console env kee)
-  (let [st (:state env)]
-    (get-in kee st)))
+  {:value "abc"})
 
 (def parser
-  (om/parser {:reader my-reader}))
+  (om/parser {:read my-reader}))
 
 (def reconciler
   (om/reconciler
