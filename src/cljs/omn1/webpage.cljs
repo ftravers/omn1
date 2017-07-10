@@ -18,7 +18,7 @@
 
 (defn my-reader
   [env kee parms]
-  (.log js/console env kee)
+  (.log js/console (:target env))
   {:value "abc"})
 
 (def parser
