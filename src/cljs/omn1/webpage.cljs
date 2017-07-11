@@ -10,7 +10,7 @@
 
   static om/IQueryParams
   (params [this]
-          {:name "" :pword ""})
+          {:name "fenton" :pword "passwErd"})
 
   Object
   (render
